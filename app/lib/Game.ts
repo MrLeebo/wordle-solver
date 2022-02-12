@@ -1,10 +1,8 @@
-import * as fs from "fs";
-import path from "path";
 import invariant from "tiny-invariant";
 import PatternBuilder from "./PatternBuilder";
+import answers from "./answers.json";
 
-const filepath = path.join(__dirname, "../answers.txt");
-export const answers = fs.readFileSync(filepath).toString().split("\n");
+export { answers };
 
 export type Clue = [boolean, string, string];
 
