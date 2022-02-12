@@ -15,7 +15,6 @@ function Document({ children, title }) {
         <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.png" type="image/png" />
         {title ? <title>{title}</title> : null}
-        <script src="https://cdn.tailwindcss.com" />
         <Meta />
         <Links />
       </head>

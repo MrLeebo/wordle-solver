@@ -5,7 +5,7 @@ import {
   Form as RemixForm,
   json,
   useLoaderData,
-  useTransition
+  useTransition,
 } from "remix";
 import { commitSession, getSession } from "~/sessions";
 import { Player, Clue } from "../lib/Game";
@@ -14,6 +14,7 @@ import Input from "../components/Input";
 import Button from "../components/Button";
 import ClueSummary from "../components/ClueSummary";
 import RemainingList from "~/components/RemainingList";
+import { useRef } from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -41,8 +42,8 @@ export const action: ActionFunction = async ({ request }) => {
     { ok: true },
     {
       headers: {
-        "Set-Cookie": await commitSession(session)
-      }
+        "Set-Cookie": await commitSession(session),
+      },
     }
   );
 };
@@ -53,6 +54,7 @@ export default function Play() {
     remaining: string[];
     gameOver: boolean;
   }>();
+  const ref = useRef<HTMLInputElement>();
   const transition = useTransition();
   const isSubmitting = transition.state === "submitting";
 
@@ -71,6 +73,7 @@ export default function Play() {
             <input type="hidden" name="_action" value="guess" />
             <div className="w-40">
               <Input
+                ref={ref}
                 name="guess"
                 label="Guess"
                 max="5"
@@ -92,7 +95,17 @@ export default function Play() {
 
       <ClueSummary clues={clues} />
 
-      {!gameOver && <RemainingList remaining={remaining} />}
+      {!gameOver && (
+        <RemainingList
+          remaining={remaining}
+          onSelect={(answer) => {
+            if (ref.current) {
+              ref.current.value = answer;
+              ref.current.select();
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

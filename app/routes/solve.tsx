@@ -5,7 +5,7 @@ import {
   json,
   useLoaderData,
   ActionFunction,
-  useTransition
+  useTransition,
 } from "remix";
 import Button from "~/components/Button";
 import Form from "~/components/Form";
@@ -14,6 +14,7 @@ import ClueSummary from "~/components/ClueSummary";
 import RemainingList from "~/components/RemainingList";
 import { commitSession, getSession } from "~/sessions";
 import { Solver, Clue } from "../lib/Game";
+import { useRef } from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await getSession(request.headers.get("Cookie"));
@@ -44,8 +45,8 @@ export const action: ActionFunction = async ({ request }) => {
     { ok: true },
     {
       headers: {
-        "Set-Cookie": await commitSession(session)
-      }
+        "Set-Cookie": await commitSession(session),
+      },
     }
   );
 };
@@ -56,6 +57,8 @@ export default function Solve(): JSX.Element {
     remaining: string[];
     gameOver: boolean;
   }>();
+  const guessRef = useRef<HTMLInputElement>();
+  const clueRef = useRef<HTMLInputElement>();
   const transition = useTransition();
   const isSubmitting = transition.state === "submitting";
 
@@ -70,22 +73,37 @@ export default function Solve(): JSX.Element {
 
       {!gameOver && (
         <div className="mb-6">
-          <Form method="patch">
+          <Form method="post">
             <input type="hidden" name="_action" value="submit" />
             <Input
+              ref={guessRef}
               name="guess"
               label="Guess"
               min="5"
               max="5"
               required
-              pattern="[a-z]{5}"
+              pattern="[a-zA-Z]{5}"
               disabled={isSubmitting || gameOver}
+              onChange={(e) => {
+                e.target.value = e.target.value
+                  .replace(/[^a-zA-Z]/g, "")
+                  .slice(0, 5);
+
+                if (clueRef.current) clueRef.current.value = "";
+                if (e.target.value?.length === 5) clueRef.current.select();
+              }}
             />
             <Input
+              ref={clueRef}
               name="clue"
               label="Clue"
               pattern="[.;/]{5}"
               disabled={isSubmitting || gameOver}
+              onChange={(e) => {
+                e.target.value = e.target.value
+                  .replace(/[^.;/]/g, "")
+                  .slice(0, 5);
+              }}
               helpText={
                 <>
                   <p className="mb-4">
@@ -136,7 +154,18 @@ export default function Solve(): JSX.Element {
       )}
 
       <ClueSummary clues={clues} editable />
-      <RemainingList remaining={remaining} />
+      <RemainingList
+        remaining={remaining}
+        onSelect={(answer) => {
+          if (guessRef.current) {
+            guessRef.current.value = answer;
+            if (clueRef.current) {
+              clueRef.current.value = "";
+              clueRef.current.select();
+            }
+          }
+        }}
+      />
     </div>
   );
 }
