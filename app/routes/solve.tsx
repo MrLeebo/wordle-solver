@@ -7,12 +7,12 @@ import {
   ActionFunction,
   useTransition,
 } from "remix";
-import Button from "~/components/Button";
-import Form from "~/components/Form";
-import Input from "~/components/Input";
-import ClueSummary from "~/components/ClueSummary";
-import RemainingList from "~/components/RemainingList";
-import { commitSession, getSession } from "~/sessions";
+import Button from "../components/Button";
+import Form from "../components/Form";
+import Input from "../components/Input";
+import ClueSummary from "../components/ClueSummary";
+import RemainingList from "../components/RemainingList";
+import { commitSession, getSession } from "../sessions";
 import { Solver, Clue } from "../lib/Game";
 import { useRef } from "react";
 

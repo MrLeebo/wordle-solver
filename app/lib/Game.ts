@@ -3,7 +3,7 @@ import path from "path";
 import invariant from "tiny-invariant";
 import PatternBuilder from "./PatternBuilder";
 
-const filepath = path.join(__dirname, "../app/lib/answers.txt");
+const filepath = path.join(__dirname, "../answers.txt");
 export const answers = fs.readFileSync(filepath).toString().split("\n");
 
 export type Clue = [boolean, string, string];
@@ -111,7 +111,7 @@ export class Player extends Game {
     const n = this.clues.push([
       false,
       this.clues.length === 6 ? null : clue,
-      input
+      input,
     ]);
 
     return this.clues[n - 1];

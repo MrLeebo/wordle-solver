@@ -7,13 +7,13 @@ import {
   useLoaderData,
   useTransition,
 } from "remix";
-import { commitSession, getSession } from "~/sessions";
+import { commitSession, getSession } from "../sessions";
 import { Player, Clue } from "../lib/Game";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import ClueSummary from "../components/ClueSummary";
-import RemainingList from "~/components/RemainingList";
+import RemainingList from "../components/RemainingList";
 import { useRef } from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
