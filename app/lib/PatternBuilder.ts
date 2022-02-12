@@ -49,7 +49,6 @@ export default class PatternBuilder {
       return memo + `[${possible}]`;
     }, seekers);
 
-    console.log({ pattern });
     return new RegExp(pattern);
   }
 }

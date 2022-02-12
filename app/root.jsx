@@ -1,5 +1,4 @@
-import { Meta, Links, Scripts, LiveReload, useCatch } from "remix";
-import { Outlet } from "react-router-dom";
+import { Meta, Links, Scripts, LiveReload, Outlet, useCatch } from "remix";
 
 import stylesUrl from "./styles/app.css";
 import Layout from "./components/Layout";
